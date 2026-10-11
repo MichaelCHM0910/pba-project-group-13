@@ -5,7 +5,6 @@ PBA Fall 2026 Final Project - **Group 13**
 ## Team Members
 
 - 張宏敏 (Team Leader, [@MichaelCHM0910](https://github.com/MichaelCHM0910))
-- 黃湘琴 (Member, [@Chelsy114006474](https://github.com/Chelsy114006474))
 
 ## Topic Ideas
 
