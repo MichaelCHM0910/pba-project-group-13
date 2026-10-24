@@ -10,24 +10,9 @@ PBA Fall 2026 Final Project - **Group 13**
 - 黃湘琴 ([@Chelsy114006474](https://github.com/Chelsy114006474))
 - 薛函書 ([@vera0051206-ctrl](https://github.com/vera0051206-ctrl))
 
-## Topic
+## Topic Ideas
 
-**What makes a song popular?** Do a song's audio features (danceability, energy,
-length, ...) predict its Spotify popularity, beyond its genre and release year?
-Proposal: [`proposal/`](proposal/).
-
-## Project Structure
-
-```
-R/01_get_data.R              download raw data -> data/spotify_clean.csv
-data/codebook.md             variable table (name, meaning, unit)
-data/spotify_clean.csv       cleaned data, one row per song (created by the script)
-analysis/01_data_check.qmd   Milestone 2 data check: summaries, plots, baseline regression
-proposal/                    Milestone 2 proposal (English + bilingual team version)
-```
-
-To reproduce: open the project in RStudio, run `R/01_get_data.R`, then render
-`analysis/01_data_check.qmd`. Packages: `tidyverse`, `here`.
+_TBD_
 
 ## How to Contribute (for team members)
 
