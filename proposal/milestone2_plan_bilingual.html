@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>Milestone 2 Team Plan – Group 13 (EN / 中文)</title>
+<style>
+  @page { size: A4; margin: 14mm 13mm; }
+  body { font-family: "Segoe UI", "Microsoft JhengHei", Arial, sans-serif; font-size: 9.6pt; line-height: 1.42; color: #111; }
+  h1 { font-size: 15pt; margin: 0 0 2px; }
+  .sub { color: #444; margin-bottom: 10px; font-size: 9.2pt; }
+  h2 { font-size: 11.5pt; margin: 14px 0 4px; background: #1f3b57; color: #fff; padding: 3px 7px; }
+  table.bi { border-collapse: collapse; width: 100%; table-layout: fixed; page-break-inside: auto; }
+  table.bi > tbody > tr > td { width: 50%; vertical-align: top; padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  table.bi > tbody > tr > td:first-child { border-right: 2px solid #c9d6e3; }
+  table.bi th { width: 50%; background: #e9eff5; text-align: left; padding: 3px 8px; font-size: 9pt; }
+  tr { page-break-inside: avoid; }
+  p, li { margin: 3px 0; }
+  ul, ol { margin: 2px 0; padding-left: 17px; }
+  table.v { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin: 4px 0; }
+  table.v th, table.v td { border: 1px solid #bbb; padding: 2px 5px; text-align: left; vertical-align: top; }
+  table.v th { background: #eee; }
+  .note { background: #fff7e0; border-left: 4px solid #e0a800; padding: 5px 9px; margin: 6px 0; }
+  code { font-size: 8.8pt; background: #f2f2f2; padding: 0 2px; }
+</style>
+</head>
+<body>
+<h1>Milestone 2 Team Plan — What Makes a Song Popular?<br>Milestone 2 小組計畫 — 什麼讓一首歌受歡迎？</h1>
+<div class="sub">PBA Fall 2026 · Group 13 · 張宏敏 (leader 組長), 陳禹之, 卓妤薪, 黃湘琴, 薛函書<br>
+Repo: https://github.com/MichaelCHM0910/pba-project-group-13 · Prepared 2026-10-24</div>
+
+<div class="note"><b>Deadline: Sun 25 Oct 2026, 23:59.</b> Only the leader submits, as a PDF on eeclass. Please read this and leave comments by <b>Sun 25 Oct, 18:00</b>.<br>
+<b>截止：2026/10/25（日）23:59</b>，由組長在 eeclass 繳交 PDF。請大家在 <b>10/25 18:00 前</b>看完並回覆意見。</div>
+
+<h2>1. What Milestone 2 asks for ｜ 作業要求</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td>A 1–2 page proposal (informal is fine) that covers:
+<ol>
+<li>The research question in one sentence, and whether it is descriptive, predictive, or causal.</li>
+<li>The hypothesis and why it might be true (a plausible mechanism matters more than a citation).</li>
+<li>A data description: source and how it was collected, unit of observation, period, number of observations, and a variable table (name, meaning, unit).</li>
+<li>The key variables: explanatory variable / treatment and outcome, and how each is measured.</li>
+<li>What would count as evidence: which pattern supports the hypothesis and which contradicts it.</li>
+</ol>
+Data must be real (not synthetic Kaggle data); a Kaggle dataset is OK only if its original source is documented. Load the data in R before writing the proposal. Nothing is locked in; we can change later.</td>
+<td>一份 1–2 頁的提案（不用太正式），內容包括：
+<ol>
+<li>一句話的研究問題，並說明是描述型、預測型還是因果型。</li>
+<li>假設，以及為什麼可能成立（合理的機制比引用文獻重要）。</li>
+<li>資料描述：來源與蒐集方式、觀察單位、期間、樣本數，以及變數表（名稱、意義、單位）。</li>
+<li>關鍵變數：解釋變數（或處理）與結果變數，各自怎麼衡量。</li>
+<li>什麼算證據：什麼樣的資料型態支持假設、什麼樣的型態推翻假設。</li>
+</ol>
+資料必須是真實資料（不能用 Kaggle 上的合成資料）；Kaggle 資料要能查到原始來源才可以用。寫提案前要先在 R 讀進資料檢查。提案不是定案，之後可以改。</td></tr>
+</table>
+
+<h2>2. Proposed question ｜ 研究問題</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Which audio features of a song (danceability, energy, loudness, length, and others) predict its popularity on Spotify, after accounting for its genre and release year?</b><br><br>
+Type: <b>predictive</b>, with a descriptive first part. We do not claim causation: songs are not randomly assigned their features, and artist fame is not in the data.</td>
+<td><b>在控制曲風與發行年份之後，一首歌的音訊特徵（好不好跳、能量、音量、長度等）能不能預測它在 Spotify 上的熱門程度？</b><br><br>
+類型：<b>預測型</b>，先做一段描述型分析。我們不主張因果：歌曲的特徵不是隨機分配的，資料裡也沒有歌手知名度。</td></tr>
+</table>
+
+<h2>3. Hypotheses ｜ 假設與理由</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>H1.</b> Danceable, loud, and shorter songs are more popular. Streaming pays per play and a play counts after 30 seconds, so shorter songs are replayed more and skipped less; danceable, loud songs fit the party, workout, and "hits" playlists that drive most listening.</td>
+<td><b>H1.</b> 好跳、大聲、比較短的歌比較紅。串流以「播放次數」計酬，聽超過 30 秒就算一次播放，所以短歌會被重播更多、被跳過更少；好跳又大聲的歌適合派對、健身、熱門歌單，而這些歌單貢獻了大部分的收聽量。</td></tr>
+<tr><td><b>H2.</b> Instrumental songs are less popular, because vocals and lyrics are what listeners remember, sing, and share.</td>
+<td><b>H2.</b> 純音樂（沒有人聲）比較不紅，因為人聲和歌詞才是聽眾記得、會跟著唱、會分享的部分。</td></tr>
+<tr><td><b>H3.</b> Genre and release year matter more than audio features. Spotify's score is based on recent plays, so new releases score higher, and pop has a larger audience than EDM.</td>
+<td><b>H3.</b> 曲風和發行年份的影響比音訊特徵大。Spotify 的分數主要看「最近」的播放量，所以新歌分數較高；流行樂的聽眾也比電子舞曲多。</td></tr>
+</table>
+
+<h2>4. Data ｜ 資料描述</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Source:</b> "Spotify Songs", TidyTuesday 2020-01-21. Collected in Jan 2020 by Kaylin Pavlik from the official Spotify Web API with the <code>spotifyr</code> R package, by pulling songs from playlists in six genres. Comes with a codebook. It is not synthetic Kaggle data.<br>
+<b>Unit:</b> one song. <b>Period:</b> popularity snapshot from Jan 2020; release years 1957–2020 (median 2016).<br>
+<b>Size:</b> 32,833 rows (song × playlist) → 28,356 unique songs. No missing values in the variables we use. Six genres, 4,100–5,400 songs each. 7.6 MB, so it fits on GitHub.</td>
+<td><b>來源：</b>TidyTuesday 2020-01-21 的「Spotify Songs」。由 Kaylin Pavlik 在 2020 年 1 月用 R 的 <code>spotifyr</code> 套件從 Spotify 官方 API 抓取，來自六種曲風的歌單，附有 codebook。不是 Kaggle 的合成資料。<br>
+<b>觀察單位：</b>一首歌。<b>期間：</b>熱門度是 2020 年 1 月的快照；發行年份 1957–2020（中位數 2016）。<br>
+<b>樣本數：</b>32,833 列（歌 × 歌單），去除重複後 28,356 首歌。我們要用的變數沒有缺值。六種曲風各 4,100–5,400 首。檔案 7.6 MB，可以放 GitHub。</td></tr>
+</table>
+<table class="v">
+<tr><th>Variable 變數</th><th>Meaning</th><th>意義</th><th>Unit 單位</th><th>Role 角色</th></tr>
+<tr><td>track_popularity</td><td>Spotify popularity, mostly recent plays</td><td>Spotify 熱門度，主要依近期播放量</td><td>0–100</td><td>Outcome Y 結果</td></tr>
+<tr><td>danceability</td><td>Suitability for dancing</td><td>適合跳舞的程度</td><td>0–1</td><td>X</td></tr>
+<tr><td>energy</td><td>Perceived intensity</td><td>強度、激烈程度</td><td>0–1</td><td>X</td></tr>
+<tr><td>loudness</td><td>Average loudness</td><td>平均音量</td><td>dB</td><td>X</td></tr>
+<tr><td>duration_min</td><td>Song length</td><td>歌曲長度</td><td>minutes 分鐘</td><td>X</td></tr>
+<tr><td>instrumentalness</td><td>Likelihood of no vocals</td><td>沒有人聲的可能性</td><td>0–1</td><td>X</td></tr>
+<tr><td>valence</td><td>Positiveness (happy vs. sad)</td><td>情緒正向程度（快樂/悲傷）</td><td>0–1</td><td>X</td></tr>
+<tr><td>acousticness / speechiness / liveness</td><td>Acoustic; spoken words; live</td><td>原聲樂器；口說成分；現場錄音</td><td>0–1</td><td>X</td></tr>
+<tr><td>tempo</td><td>Tempo</td><td>速度</td><td>BPM</td><td>X</td></tr>
+<tr><td>mode</td><td>Major or minor key</td><td>大調或小調</td><td>major/minor</td><td>X</td></tr>
+<tr><td>genre</td><td>Playlist genre</td><td>歌單曲風</td><td>6 categories 類</td><td>Control 控制</td></tr>
+<tr><td>release_year</td><td>Album release year</td><td>專輯發行年份</td><td>year 年</td><td>Control 控制</td></tr>
+</table>
+
+<h2>5. Evidence and first look ｜ 什麼算證據、初步結果</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Supports:</b> holding genre and year fixed, danceability and loudness have positive coefficients, duration and instrumentalness negative; and adding audio features lowers test-set prediction error (RMSE) compared with a genre + year model.<br>
+<b>Contradicts:</b> coefficients near zero or of the opposite sign, or no gain in test-set accuracy, meaning popularity depends on things outside the sound (artist, marketing, playlists).</td>
+<td><b>支持假設：</b>在控制曲風和年份後，danceability、loudness 係數為正，duration、instrumentalness 係數為負；且加入音訊特徵後，測試集的預測誤差（RMSE）比只用曲風 + 年份的模型低。<br>
+<b>推翻假設：</b>係數接近 0 或方向相反，或加入音訊特徵後測試集準確度沒有提升，代表熱門度取決於聲音以外的因素（歌手、行銷、歌單）。</td></tr>
+<tr><td><b>First check (already done):</b> correlations with popularity are weak: duration −0.14, instrumentalness −0.12, energy −0.10, danceability +0.05. Mean popularity: pop 45.9, rap 41.8, Latin 41.4, rock 39.7, R&amp;B 35.9, EDM 30.7. This hints H3 may hold, and energy goes against H1. That is fine: an honest "audio features matter little" is a valid result.</td>
+<td><b>初步檢查（已做）：</b>各特徵與熱門度的相關都很弱：長度 −0.14、純音樂程度 −0.12、能量 −0.10、好跳程度 +0.05。各曲風平均熱門度：pop 45.9、rap 41.8、Latin 41.4、rock 39.7、R&amp;B 35.9、EDM 30.7。看起來 H3 可能成立，而能量的方向和 H1 相反。這沒關係：誠實地得出「音訊特徵影響不大」也是有效的結論。</td></tr>
+</table>
+
+<h2>6. Methods and limitations ｜ 方法與限制</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Methods:</b> descriptive plots by genre and year; linear regression with controls; train/test split to compare prediction models; logistic regression for "hit" (popularity ≥ 70).<br>
+<b>Robustness:</b> repeat without the 9% of songs with popularity 0, and within each genre.<br>
+<b>Limitations:</b> songs come from playlists, not a random sample; popularity is one snapshot; artist fame is missing. No personal data.</td>
+<td><b>方法：</b>依曲風、年份做描述圖表；加控制變數的線性迴歸；切訓練集/測試集比較預測模型；用 logistic regression 預測「熱門歌」（熱門度 ≥ 70）。<br>
+<b>穩健性：</b>排除 9% 熱門度為 0 的歌（多是重複發行的版本）再跑一次，並分曲風各跑一次。<br>
+<b>限制：</b>歌曲來自歌單而非隨機抽樣；熱門度只是某一時點的快照；沒有歌手知名度。資料不含個人資訊。</td></tr>
+</table>
+
+<h2>7. What is already on GitHub ｜ GitHub 上已完成的部分</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><ul>
+<li><code>R/01_get_data.R</code>: downloads the raw data into <code>data/raw/</code> (not uploaded) and saves the cleaned file <code>data/spotify_clean.csv</code> (one row per song).</li>
+<li><code>data/codebook.md</code>: variable table.</li>
+<li><code>analysis/01_data_check.qmd</code>: sample size, missing values, popularity histogram, popularity by genre and year, correlations, a first regression.</li>
+<li><code>proposal/</code>: the English proposal to submit, and this file.</li>
+</ul>
+<b>To run:</b> in RStudio, <b>Pull</b> → open the project → run <code>R/01_get_data.R</code> → Render <code>analysis/01_data_check.qmd</code>. Needs packages <code>tidyverse</code> and <code>here</code>.</td>
+<td><ul>
+<li><code>R/01_get_data.R</code>：下載原始資料到 <code>data/raw/</code>（不上傳），清理後存成 <code>data/spotify_clean.csv</code>（一首歌一列）。</li>
+<li><code>data/codebook.md</code>：變數表。</li>
+<li><code>analysis/01_data_check.qmd</code>：樣本數、缺值、熱門度分布圖、各曲風與年份的熱門度、相關係數、第一個迴歸。</li>
+<li><code>proposal/</code>：要繳交的英文提案，以及這份檔案。</li>
+</ul>
+<b>執行方式：</b>在 RStudio 先 <b>Pull</b> → 開啟專案 → 執行 <code>R/01_get_data.R</code> → Render <code>analysis/01_data_check.qmd</code>。需要套件 <code>tidyverse</code> 和 <code>here</code>。</td></tr>
+</table>
+
+<h2>8. Suggested roles (please claim one) ｜ 建議分工（請認領）</h2>
+<table class="v">
+<tr><th>Role 角色</th><th>Tasks</th><th>工作內容</th><th>Owner 負責人</th></tr>
+<tr><td>Coordinator 統籌</td><td>Repo, data script, merge, submit milestones</td><td>管理 repo、資料程式、整合、繳交</td><td>張宏敏</td></tr>
+<tr><td>Descriptive 描述分析</td><td>Plots of popularity by genre, year, features</td><td>熱門度依曲風、年份、特徵的圖表</td><td></td></tr>
+<tr><td>Regression 迴歸</td><td>Linear models with controls; interpret coefficients</td><td>加控制變數的迴歸、解讀係數</td><td></td></tr>
+<tr><td>Prediction 預測</td><td>Train/test split, RMSE, "hit" logistic model</td><td>訓練/測試集、RMSE、熱門歌 logistic 模型</td><td></td></tr>
+<tr><td>Writing 撰寫</td><td>Background, mechanisms, limitations, report editing</td><td>背景、機制、限制、報告潤稿</td><td></td></tr>
+</table>
+
+<h2>9. Before the deadline ｜ 截止前每個人要做的事</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><ol>
+<li>Read the English proposal (<code>proposal/milestone2_proposal.pdf</code>) and reply with changes by Sun 18:00.</li>
+<li>Claim a role in section 8.</li>
+<li>Optional: Pull and run the data check, to make sure the code works on your computer.</li>
+</ol></td>
+<td><ol>
+<li>閱讀英文提案（<code>proposal/milestone2_proposal.pdf</code>），週日 18:00 前回覆修改意見。</li>
+<li>在第 8 節認領一個角色。</li>
+<li>選做：Pull 下來跑一次資料檢查，確認程式在自己電腦上能跑。</li>
+</ol></td></tr>
+</table>
+</body>
+</html>

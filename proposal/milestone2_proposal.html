@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Milestone 2 Proposal – Group 13</title>
+<style>
+  @page { size: A4; margin: 16mm 17mm; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.2pt; line-height: 1.38; color: #111; }
+  h1 { font-size: 15pt; margin: 0 0 2px; }
+  .sub { color: #444; margin-bottom: 10px; font-size: 9.5pt; }
+  h2 { font-size: 11.2pt; margin: 11px 0 3px; border-bottom: 1px solid #bbb; padding-bottom: 1px; }
+  p, li { margin: 3px 0; }
+  ul { margin: 2px 0; padding-left: 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.8pt; margin-top: 4px; }
+  th, td { border: 1px solid #bbb; padding: 2px 5px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+</style>
+</head>
+<body>
+<h1>What Makes a Song Popular?</h1>
+<div class="sub">PBA Fall 2026 · Group 13 · Milestone 2 Proposal ·
+Repo: github.com/MichaelCHM0910/pba-project-group-13<br>
+張宏敏 (leader), 陳禹之, 卓妤薪, 黃湘琴, 薛函書</div>
+
+<h2>1. Research question</h2>
+<p><b>Which audio features of a song (danceability, energy, loudness, length, and others) predict its popularity on Spotify, after accounting for its genre and release year?</b></p>
+<p>The question is <b>predictive</b>, with a descriptive first part (how popularity differs across genres and years). We do not claim causal effects: songs are not randomly assigned their features, and artist fame is not in the data.</p>
+
+<h2>2. Hypotheses and reasons</h2>
+<ul>
+<li><b>H1. Danceable, loud, and shorter songs are more popular.</b> Streaming pays per play, and a play counts after 30 seconds, so shorter songs get replayed more and are skipped less. Danceable, loud songs fit the party, workout, and "hits" playlists that drive most listening.</li>
+<li><b>H2. Instrumental songs are less popular.</b> Vocals and lyrics are what listeners remember, sing, and share.</li>
+<li><b>H3. Genre and release year matter more than audio features.</b> Spotify's score is based on recent plays, so new releases score higher, and some genres (pop) have larger audiences than others (EDM).</li>
+</ul>
+
+<h2>3. Data description</h2>
+<p><b>Source.</b> "Spotify Songs", TidyTuesday, 21 Jan 2020 (github.com/rfordatascience/tidytuesday, data/2020/2020-01-21). Kaylin Pavlik collected it in January 2020 from the official Spotify Web API with the <code>spotifyr</code> R package, by pulling songs from Spotify playlists in six genres. The audio features are Spotify's own measures. A codebook comes with the data (copied to <code>data/codebook.md</code>).</p>
+<p><b>Unit of observation:</b> one song. <b>Period:</b> popularity is a snapshot from January 2020; release years run from 1957 to 2020 (median 2016). <b>Observations:</b> 32,833 song–playlist rows; 28,356 unique songs after removing duplicates. No missing values in the variables we use. Six genres with 4,100–5,400 songs each.</p>
+<table>
+<tr><th>Variable</th><th>Meaning</th><th>Unit</th><th>Role</th></tr>
+<tr><td>track_popularity</td><td>Spotify popularity, based mostly on recent number of plays</td><td>0–100</td><td>Outcome (Y)</td></tr>
+<tr><td>danceability</td><td>Suitability for dancing (tempo, rhythm stability, beat strength)</td><td>0–1</td><td>X</td></tr>
+<tr><td>energy</td><td>Perceived intensity and activity</td><td>0–1</td><td>X</td></tr>
+<tr><td>loudness</td><td>Average loudness of the track</td><td>dB (−60 to 0)</td><td>X</td></tr>
+<tr><td>duration_min</td><td>Song length</td><td>minutes</td><td>X</td></tr>
+<tr><td>instrumentalness</td><td>Likelihood the track has no vocals</td><td>0–1</td><td>X</td></tr>
+<tr><td>valence</td><td>Musical positiveness (happy vs. sad)</td><td>0–1</td><td>X</td></tr>
+<tr><td>acousticness, speechiness, liveness</td><td>Acoustic sound; spoken words; live recording</td><td>0–1</td><td>X</td></tr>
+<tr><td>tempo</td><td>Estimated tempo</td><td>beats per minute</td><td>X</td></tr>
+<tr><td>mode</td><td>Major or minor key</td><td>major / minor</td><td>X</td></tr>
+<tr><td>genre</td><td>Genre of the source playlist</td><td>EDM, Latin, pop, R&amp;B, rap, rock</td><td>Control</td></tr>
+<tr><td>release_year</td><td>Album release year</td><td>year</td><td>Control</td></tr>
+</table>
+
+<h2>4. Key variables and measurement</h2>
+<p><b>Outcome:</b> <code>track_popularity</code> (0–100), computed by Spotify from how many plays a song has had and how recent they are. We also plan a binary version, "hit" = popularity ≥ 70. <b>Explanatory variables:</b> Spotify's audio features, computed by Spotify's audio analysis of each recording. <b>Controls:</b> genre and release year.</p>
+
+<h2>5. What would count as evidence</h2>
+<ul>
+<li><b>Supports H1/H2:</b> in a regression with genre and release year held fixed, danceability and loudness have positive coefficients, duration and instrumentalness negative ones; and adding audio features lowers prediction error (RMSE) on a held-out test set compared with a genre + year model.</li>
+<li><b>Contradicts:</b> coefficients near zero or of the opposite sign, or no gain in test-set accuracy from audio features. That would mean popularity depends on things outside the sound itself (artist, marketing, playlists).</li>
+<li><b>First check (done):</b> correlations with popularity are weak: duration −0.14, instrumentalness −0.12, energy −0.10, danceability +0.05. Mean popularity differs by genre (pop 45.9 vs. EDM 30.7). This already hints that H3 may hold, and energy runs against H1.</li>
+</ul>
+
+<h2>6. Plan and limitations</h2>
+<p><b>Methods:</b> descriptive plots by genre and year; linear regression with controls; train/test split to compare prediction models; logistic regression for "hit". <b>Robustness:</b> repeat without the 9% of songs with popularity 0 (often duplicate re-releases), and within each genre. <b>Limitations:</b> songs come from playlists, not a random sample of all music; popularity is one snapshot in time; artist fame is missing, so a famous artist's weak song can still score high. The data contain no personal information.</p>
+</body>
+</html>
