@@ -10,9 +10,23 @@ PBA Fall 2026 Final Project - **Group 13**
 - 黃湘琴 ([@Chelsy114006474](https://github.com/Chelsy114006474))
 - 薛函書 ([@vera0051206-ctrl](https://github.com/vera0051206-ctrl))
 
-## Topic Ideas
+## Topic
 
-_TBD_
+**What makes a song popular?** Is a song's danceability associated with its
+popularity on Spotify, and does the association hold among songs of the same genre?
+Milestone 2 proposal: [`proposal/`](proposal/) (a first version; the team can still revise it).
+
+## Project Structure
+
+```
+R/01_get_data.R              download raw data -> data/spotify_tracks_clean.csv
+data/codebook.md             variable table (name, meaning, unit)
+analysis/01_data_check.qmd   data check + first pass of Step 1 and Step 2
+proposal/                    Milestone 2 proposal (English) and team plan (English/Chinese)
+```
+
+To reproduce: open the project in RStudio, run `R/01_get_data.R`, then render
+`analysis/01_data_check.qmd`. Packages: `tidyverse`, `here`.
 
 ## How to Contribute (for team members)
 

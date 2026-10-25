@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>Milestone 2 Team Plan – Group 13 (EN / 中文)</title>
+<style>
+  @page { size: A4; margin: 14mm 13mm; }
+  body { font-family: "Segoe UI", "Microsoft JhengHei", Arial, sans-serif; font-size: 9.6pt; line-height: 1.42; color: #111; }
+  h1 { font-size: 15pt; margin: 0 0 2px; }
+  .sub { color: #444; margin-bottom: 10px; font-size: 9.2pt; }
+  h2 { font-size: 11.5pt; margin: 14px 0 4px; background: #1f3b57; color: #fff; padding: 3px 7px; }
+  table.bi { border-collapse: collapse; width: 100%; table-layout: fixed; }
+  table.bi > tbody > tr > td { width: 50%; vertical-align: top; padding: 4px 8px; border-bottom: 1px solid #ddd; }
+  table.bi > tbody > tr > td:first-child { border-right: 2px solid #c9d6e3; }
+  table.bi th { width: 50%; background: #e9eff5; text-align: left; padding: 3px 8px; font-size: 9pt; }
+  tr { page-break-inside: avoid; }
+  p, li { margin: 3px 0; }
+  ul, ol { margin: 2px 0; padding-left: 17px; }
+  table.v { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin: 4px 0; }
+  table.v th, table.v td { border: 1px solid #bbb; padding: 2px 5px; text-align: left; vertical-align: top; }
+  table.v th { background: #eee; }
+  .note { background: #fff7e0; border-left: 4px solid #e0a800; padding: 5px 9px; margin: 6px 0; }
+  code { font-size: 8.8pt; background: #f2f2f2; padding: 0 2px; }
+</style>
+</head>
+<body>
+<h1>Milestone 2 Team Plan — Option 4: What Makes a Song Popular?<br>Milestone 2 小組計畫 — 選項 4：什麼讓一首歌受歡迎？</h1>
+<div class="sub">PBA Fall 2026 · Group 13 · 張宏敏 (leader 組長), 陳禹之, 卓妤薪, 黃湘琴, 薛函書 · Updated 更新 2026-10-25</div>
+
+<div class="note"><b>This is a draft for discussion.</b> Please read it and reply with comments by <b>Sun 25 Oct, 18:00</b>. The leader submits the final PDF on eeclass by <b>Sun 25 Oct, 23:59</b>.<br>
+<b>這是討論用的草稿。</b>請在 <b>10/25（日）18:00 前</b>看完並回覆意見。組長會在 <b>10/25 23:59 前</b>到 eeclass 交最後的 PDF。</div>
+
+<h2>1. What Milestone 2 asks for ｜ 作業要求</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td>A 1–2 page proposal (informal is fine) with:
+<ol>
+<li>The research question in one sentence; descriptive, predictive, or causal?</li>
+<li>Hypothesis and the reason for it.</li>
+<li>Data description: source and collection, unit of observation, period, number of observations, variable table (name, meaning, unit).</li>
+<li>Key variables (X and Y) and how they are measured.</li>
+<li>What would count as evidence for and against.</li>
+</ol>
+Data must be real; a Kaggle dataset is OK only if we document where it originally came from.</td>
+<td>一份 1–2 頁的提案（不用太正式），包含：
+<ol>
+<li>一句話的研究問題；是描述型、預測型還是因果型？</li>
+<li>假設和理由。</li>
+<li>資料描述：來源與蒐集方式、觀察單位、期間、樣本數、變數表（名稱、意義、單位）。</li>
+<li>關鍵變數（X 和 Y）以及怎麼衡量。</li>
+<li>什麼樣的結果算支持、什麼算推翻。</li>
+</ol>
+必須是真實資料；Kaggle 資料要能說明原始來源才可以用。</td></tr>
+</table>
+
+<h2>2. What I changed from Option 4 ｜ 和選項 4 原稿相比改了什麼</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><ol>
+<li><b>Cite the original source.</b> The GitHub repo we found is a re-upload of Maharshi Pandya's Kaggle "Spotify Tracks Dataset" and does not credit it. The course requires the original source, so the proposal cites Kaggle / Hugging Face.</li>
+<li><b>Remove duplicates.</b> The file has 114,000 rows but only 89,741 unique tracks, because one song can be listed under several genres. Counting it twice would bias the result.</li>
+<li><b>Compare within genre.</b> Pop and dance are both more danceable and more popular than, say, classical. Without controlling for genre, danceability may just stand in for genre.</li>
+<li><b>Expect a weak link.</b> First look: correlation is only 0.06, and popularity levels off at very high danceability. That is fine: an honest weak result is a valid project, but we should say so in the proposal.</li>
+<li><b>Added the required parts</b> (variable table, unit, period, what counts as evidence), which the original option did not have yet.</li>
+</ol></td>
+<td><ol>
+<li><b>引用原始來源。</b>我們找到的 GitHub repo 其實是轉傳 Maharshi Pandya 在 Kaggle 上的「Spotify Tracks Dataset」，而且沒註明出處。課程要求寫出原始來源，所以提案引用 Kaggle / Hugging Face 的原版。</li>
+<li><b>去除重複。</b>檔案有 114,000 列，但不重複的歌只有 89,741 首，因為同一首歌會被列在好幾個曲風下。重複計算會讓結果偏誤。</li>
+<li><b>在同曲風內比較。</b>流行、舞曲本來就比古典樂更好跳、也更紅。不控制曲風的話，danceability 可能只是在反映曲風差異。</li>
+<li><b>預期關係很弱。</b>初步看：相關係數只有 0.06，而且好跳程度很高時熱門度不再上升。這沒關係，誠實的弱結果也是好專案，但提案裡要寫清楚。</li>
+<li><b>補上作業規定的項目</b>（變數表、觀察單位、期間、什麼算證據），原本的選項說明還沒有這些。</li>
+</ol></td></tr>
+</table>
+
+<h2>3. Research question and hypotheses ｜ 研究問題與假設</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Is a song's danceability associated with its popularity on Spotify, and does the association hold among songs of the same genre?</b><br>Type: <b>descriptive</b> (association, not cause).</td>
+<td><b>一首歌的好跳程度（danceability）和它在 Spotify 的熱門度有沒有關聯？在同一個曲風裡這個關聯還成立嗎？</b><br>類型：<b>描述型</b>（看關聯，不主張因果）。</td></tr>
+<tr><td><b>H1.</b> More danceable songs are more popular: party, workout, and "hits" playlists, and short videos (TikTok, Reels), favor songs with a strong, steady beat.</td>
+<td><b>H1.</b> 越好跳的歌越紅：派對、健身、熱門歌單，以及 TikTok、Reels 短影音，都偏好節奏強而穩定的歌。</td></tr>
+<tr><td><b>H2.</b> Part of this is a genre difference, so the link shrinks within genre.</td>
+<td><b>H2.</b> 有一部分只是曲風差異，所以在同曲風內比較時，關聯會變小。</td></tr>
+</table>
+
+<h2>4. Data ｜ 資料</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Source:</b> "Spotify Tracks Dataset", Maharshi Pandya (Kaggle; Hugging Face). Collected from the official Spotify Web API: 1,000 tracks for each of 114 genres.<br>
+<b>Unit:</b> one track. <b>Period:</b> one popularity snapshot (published around 2022; exact date not documented).<br>
+<b>Size:</b> 114,000 rows → 89,741 unique tracks. No missing values. 10.5% have popularity 0. 20 MB.</td>
+<td><b>來源：</b>Maharshi Pandya 的「Spotify Tracks Dataset」（Kaggle、Hugging Face）。透過 Spotify 官方 API 蒐集，114 個曲風各 1,000 首。<br>
+<b>觀察單位：</b>一首歌。<b>期間：</b>熱門度是某一時點的快照（約 2022 年發布，確切蒐集日期沒有記載）。<br>
+<b>樣本數：</b>114,000 列 → 89,741 首不重複的歌。沒有缺值。10.5% 熱門度為 0。檔案 20 MB。</td></tr>
+</table>
+<table class="v">
+<tr><th>Variable 變數</th><th>Meaning</th><th>意義</th><th>Unit 單位</th><th>Role 角色</th></tr>
+<tr><td>popularity</td><td>Spotify popularity, mostly recent plays</td><td>Spotify 熱門度，主要依近期播放量</td><td>0–100</td><td>Y 結果</td></tr>
+<tr><td>danceability</td><td>Suitability for dancing</td><td>適合跳舞的程度</td><td>0–1</td><td>X 解釋</td></tr>
+<tr><td>track_genre</td><td>Genre the track was collected under</td><td>歌曲所屬曲風</td><td>114 categories 類</td><td>Control 控制</td></tr>
+<tr><td>energy / loudness / valence</td><td>Intensity; loudness; positiveness</td><td>強度；音量；情緒正向程度</td><td>0–1; dB; 0–1</td><td>Control 控制</td></tr>
+<tr><td>tempo / duration_ms</td><td>Tempo; length</td><td>速度；長度</td><td>BPM; ms 毫秒</td><td>Control 控制</td></tr>
+<tr><td>explicit</td><td>Explicit lyrics</td><td>是否有不雅歌詞</td><td>TRUE/FALSE</td><td>Control 控制</td></tr>
+</table>
+
+<h2>5. Evidence and first look ｜ 什麼算證據、初步結果</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><b>Supports H1:</b> clear positive slope in the scatterplot and regression, still positive after adding genre and other audio features.<br>
+<b>Supports H2:</b> the slope shrinks within genre.<br>
+<b>Contradicts H1:</b> slope near zero or negative, or gone within genre.</td>
+<td><b>支持 H1：</b>散佈圖和迴歸有明顯正斜率，加入曲風和其他音訊特徵後仍為正。<br>
+<b>支持 H2：</b>在同曲風內比較時斜率變小。<br>
+<b>推翻 H1：</b>斜率接近 0 或為負，或在同曲風內就消失。</td></tr>
+<tr><td><b>First look (89,741 unique tracks):</b> r = 0.06. Simple regression: popularity rises about 7.5 points from the least to the most danceable song. Within genre: about 3.7 points, positive in 66 of 113 genres. So genre explains about half of the link (supports H2). Mean popularity by danceability: 26.8 (0–0.2), 30.0 (0.2–0.4), 34.1 (0.4–0.6), 34.2 (0.6–0.8), 32.5 (0.8–1).</td>
+<td><b>初步結果（89,741 首不重複的歌）：</b>r = 0.06。簡單迴歸：從最不好跳到最好跳，熱門度約高 7.5 分。同曲風內比較：約 3.7 分，113 個曲風中有 66 個是正向。也就是曲風解釋了大約一半的關聯（支持 H2）。依好跳程度分組的平均熱門度：26.8（0–0.2）、30.0（0.2–0.4）、34.1（0.4–0.6）、34.2（0.6–0.8）、32.5（0.8–1）。</td></tr>
+</table>
+
+<h2>6. Plan (updated after team feedback) ｜ 分析步驟（依組員意見更新）</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td>Following Minory's idea we keep it simple, and following Chelsy's point the genre comparison stays in the main plan, because H2 and the second half of our question depend on it.<br>
+<b>Main, Step 1:</b> remove duplicates → scatterplot → simple regression <code>popularity ~ danceability</code> (H1).<br>
+<b>Main, Step 2:</b> add genre <code>popularity ~ danceability + track_genre</code>, and plot the largest genres (H2).<br>
+<b>If time allows:</b> other audio features, a quadratic term, dropping popularity-0 tracks.<br>
+<b>Limitations:</b> 1,000 tracks per genre, so not representative of all music; one snapshot; no artist fame or release date.</td>
+<td>採用妤薪的建議保持簡單，也採用湘琴的意見：曲風比較放在主要分析裡，因為 H2 和研究問題的後半段需要它。<br>
+<b>主要分析 第 1 步：</b>去除重複 → 散佈圖 → 簡單迴歸 <code>popularity ~ danceability</code>（H1）。<br>
+<b>主要分析 第 2 步：</b>加入曲風 <code>popularity ~ danceability + track_genre</code>，並畫出幾個主要曲風的關係（H2）。<br>
+<b>有時間再做：</b>其他音訊特徵、二次項、排除熱門度為 0 的歌。<br>
+<b>限制：</b>每個曲風 1,000 首，不能代表所有音樂；只有一個時點；沒有歌手知名度和發行日期。</td></tr>
+</table>
+
+<h2>7. Work to be done ｜ 工作項目</h2>
+<table class="v">
+<tr><th>Area 項目</th><th>Tasks</th><th>工作內容</th></tr>
+<tr><td>Coordination 統籌</td><td>GitHub repo, merge work, submit milestones</td><td>管理 GitHub、整合、繳交</td></tr>
+<tr><td>Data 資料</td><td>Download, remove duplicates, codebook</td><td>下載資料、去除重複、整理變數說明</td></tr>
+<tr><td>Descriptive 描述分析</td><td>Scatterplots, popularity by genre and danceability</td><td>散佈圖、依曲風與好跳程度比較熱門度</td></tr>
+<tr><td>Regression 迴歸</td><td>Simple regression, then with genre</td><td>簡單迴歸，再加入曲風</td></tr>
+<tr><td>Writing 撰寫</td><td>Background, mechanisms, limitations, editing</td><td>背景、機制、限制、潤稿</td></tr>
+</table>
+
+<h2>8. Decided so far ｜ 目前的決定</h2>
+<table class="bi"><tr><th>English</th><th>中文</th></tr>
+<tr><td><ol>
+<li>X is danceability only; other audio features are extra, if time allows.</li>
+<li>Main analysis = scatterplot + simple regression + genre comparison.</li>
+<li>Who does which task will be decided later.</li>
+</ol></td>
+<td><ol>
+<li>X 只看 danceability；其他音訊特徵有時間再加。</li>
+<li>主要分析 = 散佈圖 + 簡單迴歸 + 曲風比較。</li>
+<li>各項工作由誰負責之後再決定。</li>
+</ol></td></tr>
+</table>
+</body>
+</html>

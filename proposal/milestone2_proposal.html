@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Milestone 2 Proposal – Group 13</title>
+<style>
+  @page { size: A4; margin: 16mm 17mm; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.2pt; line-height: 1.38; color: #111; }
+  h1 { font-size: 15pt; margin: 0 0 2px; }
+  .sub { color: #444; margin-bottom: 10px; font-size: 9.5pt; }
+  h2 { font-size: 11.2pt; margin: 11px 0 3px; border-bottom: 1px solid #bbb; padding-bottom: 1px; }
+  p, li { margin: 3px 0; }
+  ul { margin: 2px 0; padding-left: 18px; }
+  table { border-collapse: collapse; width: 100%; font-size: 8.8pt; margin-top: 4px; }
+  th, td { border: 1px solid #bbb; padding: 2px 5px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+</style>
+</head>
+<body>
+<h1>What Makes a Song Popular? Danceability and Spotify Popularity</h1>
+<div class="sub">PBA Fall 2026 · Group 13 · Milestone 2 Proposal<br>
+張宏敏 (leader), 陳禹之, 卓妤薪, 黃湘琴, 薛函書</div>
+
+<h2>1. Research question</h2>
+<p><b>Is a song's danceability associated with its popularity on Spotify, and does the association hold among songs of the same genre?</b></p>
+<p>The question is <b>descriptive</b>: we measure an association, not a causal effect. Songs are not randomly assigned their danceability, and things we cannot see (artist fame, marketing) may drive both.</p>
+
+<h2>2. Hypotheses and reasons</h2>
+<ul>
+<li><b>H1. More danceable songs are more popular.</b> Most streams come from playlists, and party, workout, and "hits" playlists favor songs with a steady, strong beat. Danceable songs are also the ones used in short videos (TikTok, Reels), which send listeners to Spotify.</li>
+<li><b>H2. Part of this is a genre difference.</b> Pop, dance, and hip-hop are both more danceable and more popular than classical or ambient music, so the link may shrink once we compare songs within the same genre.</li>
+</ul>
+
+<h2>3. Data description</h2>
+<p><b>Source.</b> "Spotify Tracks Dataset" by Maharshi Pandya, on Kaggle (kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset) and Hugging Face (maharshipandya/spotify-tracks-dataset). It was collected from the official Spotify Web API: for each of 114 Spotify genres, 1,000 tracks with their popularity and Spotify's audio features. The copies in the GitHub repositories we first found (sai-chaitanya-reddy/spotify-tracks-dataset, idoyell/spotify-audio-features-eda) are the same file; we cite the original.</p>
+<p><b>Unit of observation:</b> one track. <b>Period:</b> popularity is a single snapshot taken when the data were collected (published around 2022; the exact date is not documented). <b>Observations:</b> 114,000 rows, but the same track can be listed under several genres; there are <b>89,741 unique tracks</b>. No missing values. 10.5% of tracks have popularity 0.</p>
+<table>
+<tr><th>Variable</th><th>Meaning</th><th>Unit</th><th>Role</th></tr>
+<tr><td>popularity</td><td>Spotify popularity, based mostly on how many plays a track has had recently</td><td>0–100</td><td>Outcome (Y)</td></tr>
+<tr><td>danceability</td><td>How suitable a track is for dancing (tempo, rhythm stability, beat strength)</td><td>0–1</td><td>Explanatory (X)</td></tr>
+<tr><td>track_genre</td><td>Spotify genre the track was collected under</td><td>114 categories</td><td>Grouping (genre comparison)</td></tr>
+<tr><td>energy, loudness, valence</td><td>Intensity; average loudness; musical positiveness</td><td>0–1; dB; 0–1</td><td>Extra controls (if time)</td></tr>
+<tr><td>tempo, duration_ms</td><td>Estimated tempo; track length</td><td>beats per minute; ms</td><td>Extra controls (if time)</td></tr>
+</table>
+
+<h2>4. Key variables and measurement</h2>
+<p><b>Outcome:</b> <code>popularity</code> (0–100), computed by Spotify from the number of plays and how recent they are. <b>Explanatory variable:</b> <code>danceability</code> (0–1), computed by Spotify's audio analysis of the recording. <b>Grouping variable:</b> <code>track_genre</code>, used to compare songs within the same genre. A track listed under several genres is kept once, under the first genre it appears with.</p>
+
+<h2>5. What would count as evidence</h2>
+<ul>
+<li><b>Supports H1:</b> the scatterplot and the simple regression of popularity on danceability show a clear positive slope, and the slope stays positive within genre.</li>
+<li><b>Supports H2:</b> the slope gets smaller once we compare songs within the same genre.</li>
+<li><b>Contradicts H1:</b> the slope is near zero or negative, or disappears within genre.</li>
+<li><b>First look (done, 89,741 unique tracks):</b> the correlation is weak (r = 0.06). In a simple regression, popularity rises by about 7.5 points from the least to the most danceable song (0 to 1). Within genre the slope falls to about 3.7 points, and it is positive in 66 of 113 genres. Mean popularity by danceability: 26.8 (0–0.2), 30.0 (0.2–0.4), 34.1 (0.4–0.6), 34.2 (0.6–0.8), 32.5 (0.8–1), so the relationship levels off at the top.</li>
+</ul>
+
+<h2>6. Plan and limitations</h2>
+<p><b>Main analysis</b> (both steps are needed to answer our question):</p>
+<ul>
+<li><b>Step 1, overall relationship:</b> remove duplicate tracks; scatterplot of danceability vs. popularity; simple regression <code>popularity ~ danceability</code>. Answers the first half of the question (H1).</li>
+<li><b>Step 2, genre comparison:</b> add genre to the regression (<code>popularity ~ danceability + track_genre</code>) and plot the relationship for the largest genres. Answers the second half of the question (H2).</li>
+</ul>
+<p><b>If time allows:</b> add other audio features (energy, loudness, valence, tempo, length); test a quadratic term for the levelling-off at high danceability; repeat without tracks with popularity 0.</p>
+<p><b>Limitations:</b> each genre has 1,000 tracks, so the sample is not representative of all music; popularity is one snapshot; artist fame and release date are not in the data. The data contain no personal information.</p>
+</body>
+</html>

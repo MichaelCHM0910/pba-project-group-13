@@ -1,0 +1,97 @@
+---
+title: "Danceability and Spotify Popularity — Data Check (Milestone 2)"
+author: "PBA Group 13"
+format:
+  html:
+    toc: true
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+This file checks the data before we commit to it and runs the two steps of our
+main analysis on a first pass. Run `R/01_get_data.R` first.
+
+```{r}
+#| label: setup
+library(tidyverse)
+
+tracks <- read_csv(here::here("data", "spotify_tracks_clean.csv"), show_col_types = FALSE)
+```
+
+## 1. Size and missing values
+
+```{r}
+#| label: size
+nrow(tracks)
+n_distinct(tracks$track_genre)
+
+tracks |>
+  summarise(across(everything(), \(x) sum(is.na(x)))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "n_missing") |>
+  filter(n_missing > 0)
+```
+
+## 2. Outcome (popularity) and explanatory variable (danceability)
+
+```{r}
+#| label: summaries
+tracks |>
+  summarise(mean_pop = mean(popularity), sd_pop = sd(popularity),
+            share_zero_pop = mean(popularity == 0),
+            mean_dance = mean(danceability), sd_dance = sd(danceability))
+
+ggplot(tracks, aes(popularity)) +
+  geom_histogram(binwidth = 2) +
+  labs(x = "Spotify popularity (0-100)", y = "Number of tracks")
+
+ggplot(tracks, aes(danceability)) +
+  geom_histogram(binwidth = 0.02) +
+  labs(x = "Danceability (0-1)", y = "Number of tracks")
+```
+
+## 3. Step 1: overall relationship (H1)
+
+```{r}
+#| label: step1
+cor(tracks$danceability, tracks$popularity)
+
+ggplot(tracks, aes(danceability, popularity)) +
+  geom_point(alpha = 0.03) +
+  geom_smooth(method = "lm") +
+  labs(x = "Danceability", y = "Spotify popularity")
+
+# Mean popularity by danceability group
+tracks |>
+  mutate(dance_group = cut(danceability, breaks = seq(0, 1, 0.2), include.lowest = TRUE)) |>
+  group_by(dance_group) |>
+  summarise(n = n(), mean_pop = mean(popularity))
+
+m1 <- lm(popularity ~ danceability, data = tracks)
+summary(m1)
+```
+
+## 4. Step 2: within genre (H2)
+
+```{r}
+#| label: step2
+m2 <- lm(popularity ~ danceability + track_genre, data = tracks)
+
+# Compare the danceability slope with and without genre
+tibble(
+  model = c("popularity ~ danceability", "popularity ~ danceability + track_genre"),
+  danceability_slope = c(coef(m1)["danceability"], coef(m2)["danceability"])
+)
+
+# Relationship in the six genres with the most tracks
+top_genres <- tracks |> count(track_genre, sort = TRUE) |> slice_head(n = 6) |> pull(track_genre)
+
+tracks |>
+  filter(track_genre %in% top_genres) |>
+  ggplot(aes(danceability, popularity)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ track_genre) +
+  labs(x = "Danceability", y = "Spotify popularity")
+```
