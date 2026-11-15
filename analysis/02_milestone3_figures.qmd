@@ -1,0 +1,216 @@
+---
+title: "What Makes a Song Popular? A First Look at the Data"
+subtitle: "PBA Fall 2026 · Group 13 · Milestone 3 (draft)"
+author: "張宏敏 (leader), 陳禹之, 卓妤薪, 黃湘琴, 薛函書"
+format:
+  pdf:
+    pdf-engine: xelatex
+    CJKmainfont: "Microsoft JhengHei"
+    geometry: margin=2.2cm
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(here)
+
+# Build the cleaned file from the raw data if it is not there yet
+clean_path <- here("data", "spotify_tracks_clean.csv")
+if (!file.exists(clean_path)) {
+  owd <- setwd(here())
+  source(here("R", "01_get_data.R"))
+  setwd(owd)
+}
+songs <- read_csv(clean_path, show_col_types = FALSE)
+
+dir.create(here("figures"), showWarnings = FALSE)
+theme_set(theme_minimal(base_size = 11))
+source_note <- "Source: Spotify Tracks Dataset, Maharshi Pandya (Kaggle / Hugging Face)"
+```
+
+```{r}
+#| label: numbers
+n_songs    <- nrow(songs)
+n_genres   <- n_distinct(songs$track_genre)
+r_all      <- cor(songs$danceability, songs$popularity)
+share_zero <- mean(songs$popularity == 0)
+
+# Mean popularity in five danceability bins
+bins <- songs |>
+  mutate(dance_bin = cut(danceability, breaks = seq(0, 1, 0.2),
+                         include.lowest = TRUE)) |>
+  group_by(dance_bin) |>
+  summarise(n = n(), mean_pop = mean(popularity), .groups = "drop")
+bin_text <- paste0(round(bins$mean_pop, 1), " (",
+                   c("0-0.2", "0.2-0.4", "0.4-0.6", "0.6-0.8", "0.8-1"), ")",
+                   collapse = ", ")
+
+dance0 <- songs |> filter(danceability == 0)
+n_dance0_sleep <- sum(dance0$track_genre == "sleep")
+
+# Genre alone: share of the variation in each variable
+r2_dance_genre <- summary(lm(danceability ~ track_genre, data = songs))$r.squared
+r2_pop_genre   <- summary(lm(popularity ~ track_genre, data = songs))$r.squared
+
+pct <- function(x, d = 0) paste0(round(100 * x, d), "%")
+```
+
+Our question is whether a song's danceability is associated with its
+popularity on Spotify, and whether that association holds among songs of the
+same genre. We use the Spotify Tracks Dataset, collected from the Spotify Web
+API (see `data/codebook.md`). The raw file has 114,000 rows, but the same song
+appears many times: under several genres, and as copies on compilation albums
+(for example, Imagine Dragons' "Thunder" on "Halloween Party 2022"). These
+copies usually have popularity 0 even when the original is a hit. We keep one
+row per song (same title and artists), the version with the highest
+popularity, which leaves **`r format(n_songs, big.mark = ",")` songs in
+`r n_genres` genres**. The two figures below set up the two steps of our
+planned analysis: the overall relationship (H1) and the comparison within
+genre (H2).
+
+## Figure 1. Danceability and popularity, all songs
+
+```{r}
+#| label: overall-plot
+#| fig-width: 7
+#| fig-height: 3.8
+
+fig1 <- ggplot(songs, aes(x = danceability, y = popularity)) +
+  geom_point(alpha = 0.05, size = 0.6) +
+  geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs"),
+              colour = "red", linewidth = 1.2) +
+  labs(subtitle = paste0("One point per song (n = ", format(n_songs, big.mark = ","),
+                         "); red line = smooth trend"),
+       x = "Danceability (0 = least, 1 = most danceable)",
+       y = "Popularity (0-100)",
+       caption = source_note)
+
+fig1
+ggsave(here("figures", "fig1_danceability_popularity.png"), fig1,
+       width = 7, height = 3.8, dpi = 300)
+```
+
+**What it shows.** The relationship is weak: the correlation between
+danceability and popularity is `r sprintf("%.2f", r_all)`. Average popularity by
+danceability bin is `r bin_text`. So popularity rises from the least danceable
+songs to the middle of the range and then levels off, with a small drop for the
+most danceable songs. At every danceability level, popularity is very spread
+out, from 0 to over 90. Even after removing the compilation copies,
+`r pct(share_zero, 1)` of songs have popularity exactly 0 (the dark row along
+the bottom). The upturn at the far left rests on only `r nrow(dance0)` songs
+with danceability exactly 0, and `r n_dance0_sleep` of them are from the
+"sleep" genre (white noise and sleep sounds), not ordinary songs.
+
+**Why it matters.** Danceability alone explains very little of a song's
+popularity, so H1 (more danceable songs are more popular) is only weakly
+supported at first look. Because the trend rises and then levels off rather
+than following a straight line, we plan to test a quadratic term in the
+regression. The songs at popularity 0 may still distort the fit, so we will
+repeat the analysis without them. Since the overall link is so weak, Figure 2
+checks whether it differs by genre.
+
+## Figure 2. Danceability and popularity within genre
+
+```{r}
+#| label: genre-numbers
+genres_to_show <- c("pop", "dance", "hip-hop", "classical", "ambient", "rock")
+
+genre_stats <- songs |>
+  filter(track_genre %in% genres_to_show) |>
+  group_by(track_genre) |>
+  summarise(n = n(),
+            mean_pop = mean(popularity),
+            share0 = mean(popularity == 0),
+            slope = coef(lm(popularity ~ danceability))[2],
+            slope_no0 = coef(lm(popularity ~ danceability,
+                                data = pick(everything()) |> filter(popularity > 0)))[2],
+            .groups = "drop") |>
+  arrange(desc(slope))
+
+g <- function(genre, col) genre_stats[[col]][genre_stats$track_genre == genre]
+sl <- function(genre) sprintf("%+.1f", g(genre, "slope"))
+
+strip_labels <- setNames(paste0(genre_stats$track_genre, " (n = ", genre_stats$n, ")"),
+                         genre_stats$track_genre)
+```
+
+```{r}
+#| label: genre-plot
+#| fig-width: 7.5
+#| fig-height: 5
+
+fig2 <- songs |>
+  filter(track_genre %in% genres_to_show) |>
+  mutate(track_genre = factor(track_genre, levels = genre_stats$track_genre)) |>
+  ggplot(aes(x = danceability, y = popularity)) +
+  geom_point(alpha = 0.2, size = 0.7) +
+  geom_smooth(method = "lm", colour = "red", linewidth = 1) +
+  facet_wrap(~ track_genre, labeller = as_labeller(strip_labels)) +
+  scale_x_continuous(breaks = c(0, 0.5, 1), limits = c(0, 1)) +
+  labs(subtitle = "Six genres, one point per song; red line = linear fit",
+       x = "Danceability (0-1)",
+       y = "Popularity (0-100)",
+       caption = source_note) +
+  theme(panel.spacing = unit(1, "lines"))
+
+fig2
+ggsave(here("figures", "fig2_within_genre.png"), fig2,
+       width = 7.5, height = 5, dpi = 300)
+```
+
+**What it shows.** The same relationship is plotted separately for six genres
+(panels are ordered from the most positive to the most negative slope). The
+direction differs by genre. The fitted slopes (popularity points per +1.0
+danceability) are `r sl(genre_stats$track_genre[1])` in
+`r genre_stats$track_genre[1]`, `r sl(genre_stats$track_genre[2])` in
+`r genre_stats$track_genre[2]`, `r sl(genre_stats$track_genre[3])` in
+`r genre_stats$track_genre[3]`, `r sl(genre_stats$track_genre[4])` in
+`r genre_stats$track_genre[4]`, `r sl(genre_stats$track_genre[5])` in
+`r genre_stats$track_genre[5]`, and `r sl(genre_stats$track_genre[6])` in
+`r genre_stats$track_genre[6]`. Genres also differ in average popularity, from
+`r round(min(genre_stats$mean_pop), 1)`
+(`r genre_stats$track_genre[which.min(genre_stats$mean_pop)]`) to
+`r round(max(genre_stats$mean_pop), 1)`
+(`r genre_stats$track_genre[which.max(genre_stats$mean_pop)]`). Across all
+`r n_genres` genres, genre alone accounts for `r pct(r2_dance_genre)` of the
+variation in danceability and `r pct(r2_pop_genre)` of the variation in
+popularity, so knowing a song's genre already tells us a lot about both
+variables. The panels have different numbers of songs because each song is
+kept under one genre only; some genres (for example pop) lose many songs that
+are also listed under other genres.
+
+```{r}
+#| label: tbl-genre
+genre_stats |>
+  transmute(Genre = track_genre, Songs = n,
+            `Mean popularity` = round(mean_pop, 1),
+            `Share at 0` = pct(share0),
+            `Slope` = round(slope, 1),
+            `Slope without 0s` = round(slope_no0, 1)) |>
+  knitr::kable(caption = "Popularity and the danceability slope in the six genres of Figure 2.")
+```
+
+The songs at popularity 0 still matter inside some genres (see the table).
+When we drop them, several slopes change noticeably, so a straight line fitted
+to all songs should be read with care.
+
+**Why it matters.** The overall correlation of `r sprintf("%.2f", r_all)` hides large
+differences between genres, which supports H2 that genre matters for the
+danceability-popularity link. Because genre is related to both danceability
+and popularity, part of the pattern in Figure 1 could come from differences
+between genres rather than from danceability itself. For the analysis, this
+means we should add genre to the regression
+(`popularity ~ danceability + track_genre`), test an interaction between
+danceability and genre, and run the robustness check without popularity-0
+songs.
+
+## Code and data
+
+The script `R/01_get_data.R` downloads the raw file (kept out of the
+repository) and builds the cleaned file `data/spotify_tracks_clean.csv`.
+The file `analysis/02_milestone3_figures.qmd` makes both figures and saves
+them in `figures/`.

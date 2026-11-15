@@ -1,5 +1,5 @@
 # 01_get_data.R
-# Download the Spotify Tracks Dataset and save a cleaned, one-row-per-track file.
+# Download the Spotify Tracks Dataset and save a cleaned, one-row-per-song file.
 # Run from the project root (open the RStudio project first).
 #
 # Source: "Spotify Tracks Dataset" by Maharshi Pandya, collected from the Spotify Web API.
@@ -22,15 +22,26 @@ tracks_raw <- read_csv(raw_path, show_col_types = FALSE)
 nrow(tracks_raw)    # 114,000 rows: 1,000 tracks for each of 114 genres
 
 # 2. Clean ---------------------------------------------------------------------
-# The same track can be listed under several genres, so keep it once,
-# under the first genre it appears with.
-tracks <- tracks_raw |>
-  distinct(track_id, .keep_all = TRUE) |>
-  mutate(duration_min = duration_ms / 60000) |>
-  select(track_id, track_name, artists, popularity, danceability, track_genre,
-         energy, loudness, valence, tempo, duration_min, explicit)
+# (a) The same track_id can be listed under several genres, so keep it once,
+#     under the first genre it appears with.
+tracks_unique <- tracks_raw |>
+  distinct(track_id, .keep_all = TRUE)
+nrow(tracks_unique) # 89,741 unique track_ids
 
-nrow(tracks)        # 89,741 unique tracks
+# (b) The same song (same title and artists) often appears again on
+#     compilation albums (e.g. "Halloween Party 2022") under a different
+#     track_id. These copies usually have popularity 0 even when the original
+#     is a hit, so they are not "unpopular songs". Keep one row per song:
+#     the version with the highest popularity.
+tracks <- tracks_unique |>
+  arrange(desc(popularity)) |>
+  distinct(track_name, artists, .keep_all = TRUE) |>
+  mutate(duration_min = duration_ms / 60000) |>
+  select(track_id, track_name, artists, album_name, popularity, danceability,
+         track_genre, energy, loudness, valence, tempo, duration_min, explicit) |>
+  arrange(track_genre, desc(popularity))
+
+nrow(tracks)        # unique songs after removing duplicate versions
 
 # 3. Save the cleaned file -----------------------------------------------------
 write_csv(tracks, "data/spotify_tracks_clean.csv")

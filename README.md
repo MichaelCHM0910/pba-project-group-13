@@ -19,14 +19,18 @@ Milestone 2 proposal: [`proposal/`](proposal/) (a first version; the team can st
 ## Project Structure
 
 ```
-R/01_get_data.R              download raw data -> data/spotify_tracks_clean.csv
-data/codebook.md             variable table (name, meaning, unit)
-analysis/01_data_check.qmd   data check + first pass of Step 1 and Step 2
-proposal/                    Milestone 2 proposal (English) and team plan (English/Chinese)
+R/01_get_data.R                    download raw data -> data/spotify_tracks_clean.csv
+data/spotify_tracks_clean.csv      cleaned data, one row per song (81,344 songs)
+data/codebook.md                   variable table (name, meaning, unit)
+analysis/01_data_check.qmd         data check + first pass of Step 1 and Step 2
+analysis/02_milestone3_figures.qmd Milestone 3: two figures + write-up (renders to PDF)
+figures/                           saved figures (PNG)
+proposal/                          Milestone 2 proposal (English) and team plan (English/Chinese)
 ```
 
-To reproduce: open the project in RStudio, run `R/01_get_data.R`, then render
-`analysis/01_data_check.qmd`. Packages: `tidyverse`, `here`.
+To reproduce: open the project in RStudio, run `R/01_get_data.R` (or skip it:
+the cleaned file is already in `data/`), then render the files in `analysis/`.
+Packages: `tidyverse`, `here`.
 
 ## How to Contribute (for team members)
 
